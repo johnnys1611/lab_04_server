@@ -1,49 +1,20 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <title>A-Frame Basic Scene</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
   </head>
   <body>
     <a-scene>
       <a-assets>
-        <img id="crateTexture" src="grass_texture_local.jpg" crossorigin="anonymous"/>
-        <img id="skyTexture" src="aerial-drone-wide-view-brasov-winter-romania.jpg" crossorigin="anonymous"/>
-		<a-asset-item id="myModel" src="Fantabulous Inari-Esboo.glb"></a-asset-item>
-      </a-assets> 
+        <a-asset-item id="neww" src="names2.glb"></a-asset-item>
+      </a-assets>
 
-      <a-sky src="#skyTexture" rotation="0 0 0"></a-sky>
+      <a-entity gltf-model="#neww" position="0 2 -4" scale="10 10 10"></a-entity> 
 
-      <!-- Camera -->
-      <!--<a-entity camera position="0 1.6 3" ></a-entity> -->
-	  
-	  <a-entity camera position="0 1.6 3" wasd-controls look-controls></a-entity>
-	  <!--<a-camera position="0 2 6" wasd-controls-enabled="true"></a-camera>
-	  -->
-      
-      <!-- Lighting -->
-      <a-light type="ambient" color="#555"></a-light>
-      <a-light type="directional" position="-1 4 2" intensity="0.5"></a-light>
-      
-      <!-- Ground -->
-	  <!--
-	  <a-plane rotation="-90 0 0" width="10" height="10" color="#7BC8A4"></a-plane>
-	  -->
-      <a-plane rotation="-90 0 0" width="10" height="10" src="#crateTexture"></a-plane>
-      
-      <!-- Shapes -->
-	  <a-entity gltf-model="#myModel" position="0 0 -2" rotation="0 180 0" scale="1 1 1" animation-mixer></a-entity>
-      <a-sphere position="-1 1 0" radius="0.5" color="#EF2D5E"></a-sphere>
-      <a-box position="1 0.5 0" depth="1" height="1" width="1" color="#4CC3D9"></a-box>
-      <a-cylinder position="0 0.75 -2" radius="0.3" height="1.5" color="#FFC65D"></a-cylinder>
-      <a-text value="Hello VR!" position="0 2 -3" color="#333"></a-text>
-      <a-box position="2 0.5 -1" height="1" width="1" scale="2 1 1" src="#crateTexture"></a-box>
-	  <!--
-	  <a-scene stats></a-scene>
-	  -->
+      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
+      <a-sky color="#ECECEC"></a-sky>
     </a-scene>
   </body>
 </html>
-
-
-
