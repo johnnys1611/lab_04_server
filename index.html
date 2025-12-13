@@ -6,22 +6,41 @@
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <style>
       #rubiks-menu {
-        position: absolute;
+        position: fixed;
         top: 20px;
-        left: 20px;
-        z-index: 10;
+        right: 20px;
+        width: 320px;
+        height: auto;
+        max-height: 90vh;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        box-sizing: border-box;
+        z-index: 9999;
         background: rgba(255,255,255,0.85);
         padding: 12px;
         border-radius:8px;
         font-family: sans-serif;
       }
-      #rubiks-menu button { margin: 2px 4px; padding: 6px 12px; border-radius: 5px; border: none; background: #6a95ff; color: white; font-weight: bold; cursor: pointer;}
+      #rubiks-menu button {
+        width: 100%;
+        margin: 0;
+        padding: 8px 10px;
+        border-radius: 5px;
+        border: none;
+        background: #6a95ff;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        justify-self: stretch;
+      }
+      #rubiks-menu b { grid-column: 1 / -1; text-align: center; margin: 0 0 8px 0; }
       #rubiks-menu button:hover { background: #133aa6;}
     </style>
   </head>
   <body>
     <div id="rubiks-menu">
-      <b>Rotate Slice (grouped, centered):</b><br>
+      <b>Rotate Slice (grouped, centered):</b>
 
       <!--Rotate γραμμές-->
       <!--Rotate για την πρώτη γραμμή-->
@@ -76,7 +95,7 @@
       <a-entity light="type: point; intensity:3.6; distance:10" position="0 1 -5"></a-entity>
       <a-entity id="cube-cluster"></a-entity>
       <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
-    </a-scene>
+    <a-scene stats></a-scene>
 
     <script>
     // Cube parameters
@@ -279,9 +298,3 @@
     </script>
   </body>
 </html>
-
-
-
-
-
-
