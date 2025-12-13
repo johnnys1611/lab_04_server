@@ -83,19 +83,25 @@
       <button onclick="rotateSlice('MFl')">MF_left (Mid Face, z=-3)</button>
       <button onclick="rotateSlice('MFr')">MF_right (Mid Face, z=-3)</button>
     </div>
-    <a-scene>
+    <a-scene stats>
       <a-assets>
         <a-asset-item id="cube-model" src="https://kostasgian21.github.io/computer_graphics/rubiks_cube_standard_solid_v3.glb"></a-asset-item>
+        </a-asset-item id="name" src="https://johnnys1611.github.io/CUBE/name.glb"></a-asset-item>>
         <img id="skyTexture" src="https://raw.githubusercontent.com/johnnys1611/CUBE/main/3840px-Herne_Wanne_Tunnel_03_Panorama.jpg" crossorigin="anonymous"/>
       </a-assets>
       <a-sky src="#skyTexture"></a-sky>
-      <a-entity light="type: directional; intensity:6.2; color:#fff" position="1 4 2"></a-entity>
-      <a-entity light="type: ambient; intensity:2.35; color:#fff"></a-entity>
-      <a-entity light="type: point; intensity:3.6; distance:10" position="-3 2 0"></a-entity>
-      <a-entity light="type: point; intensity:3.6; distance:10" position="0 1 -5"></a-entity>
+
+      <a-entity light="type: directional; intensity:6.2; color:#fff" position="1 4 2"></a-entity> <!--directional: το φως έρχεται παράλληλα από μία κατεύθυνση και φωτίζει ΟΛΑ τα αντικείμενα-->
+      <a-entity light="type: ambient; intensity:2.35; color:#fff"></a-entity> <!--ambient: γενικό φως παντού, χωρίς κατεύθυνση, χωρίς σκιές-->
+      <a-entity light="type: point; intensity:3.6; distance:10" position="-3 2 0"></a-entity> <!--αριστερά-->
+      <a-entity light="type: point; intensity:1.2; distance:8" position="3 2 0"></a-entity> <!--δεξιά-->
+      <a-entity light="type: point; intensity:3.6; distance:10" position="0 1 -5"></a-entity> <!--μπροστά-->
+      <a-entity light="type: point; intensity:1.8; distance:10" position="0 3 2"></a-entity> <!--πίσω-->
+
+      <a-camera position="0 2 1" rotation="-15 0 0"></a-camera> <!--καμερούλα-->
+
       <a-entity id="cube-cluster"></a-entity>
-      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
-    <a-scene stats></a-scene>
+    </a-scene>
 
     <script>
     // Cube parameters
@@ -298,7 +304,3 @@
     </script>
   </body>
 </html>
-
-
-
-
