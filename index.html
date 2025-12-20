@@ -2,41 +2,9 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Rubik's Cube Slice Rotation - Single Cubelet Version</title>
+    <title>The Underground Rubik's Cube</title>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
-    <style>
-      #rubiks-menu {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 320px;
-        height: auto;
-        max-height: 90vh;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        box-sizing: border-box;
-        z-index: 9999;
-        background: rgba(255,255,255,0.85);
-        padding: 12px;
-        border-radius:8px;
-        font-family: sans-serif;
-      }
-      #rubiks-menu button {
-        width: 100%;
-        margin: 0;
-        padding: 8px 10px;
-        border-radius: 5px;
-        border: none;
-        background: #6a95ff;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        justify-self: stretch;
-      }
-      #rubiks-menu b { grid-column: 1 / -1; text-align: center; margin: 0 0 8px 0; }
-      #rubiks-menu button:hover { background: #133aa6;}
-    </style>
+    <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <div id="rubiks-menu">
@@ -86,7 +54,7 @@
     <a-scene stats>
       <a-assets>
         <a-asset-item id="cube-model" src="https://johnnys1611.github.io/CUBE/cube_pictures_blender.glb"></a-asset-item>
-        <a-asset-item id="name-model" src="https://johnnys1611.github.io/CUBE/name.glb"></a-asset-item>
+        <a-asset-item id="name-model" src="https://johnnys1611.github.io/CUBE/name_Tzonys.glb"></a-asset-item>
         <img id="skyTexture" src="https://raw.githubusercontent.com/johnnys1611/CUBE/main/3840px-Herne_Wanne_Tunnel_03_Panorama.jpg" crossorigin="anonymous"/>
       </a-assets>
 
@@ -101,7 +69,7 @@
 
       <a-camera position="0 2 1" rotation="-15 0 0"></a-camera> <!--καμερούλα-->
 
-      <a-entity gltf-model="#name-model" position="0.1 0.2 -2.1" scale="10 5 10" rotation="90 0 0"> </a-entity>
+      <a-entity gltf-model="#name-model" position="0 0.2 -2" scale="20 10 20" rotation="90 0 0"> </a-entity>
 
       <a-entity id="cube-cluster"></a-entity>
     </a-scene>
@@ -307,4 +275,3 @@
     </script>
   </body>
 </html>
-
