@@ -14,7 +14,7 @@
       <!--Rotate για την πρώτη γραμμή-->
       <button onclick="rotateSlice('Tl')">T_left (Top, y=3)</button>
       <button onclick="rotateSlice('Tr')">T_right (Top, y=3)</button>
-
+	
       <!--Rotate για την τελευταία γραμμή-->
       <button onclick="rotateSlice('Dl')">D_left (Down, y=1)</button>
       <button onclick="rotateSlice('Dr')">D_right (Down, y=1)</button>
@@ -69,209 +69,223 @@
 
       <a-camera position="0 2 1" rotation="-15 0 0"></a-camera> <!--καμερούλα-->
 
-      <a-entity gltf-model="#name-model" position="0 0.2 -2" scale="20 10 20" rotation="90 0 0"> </a-entity>
+      <a-entity gltf-model="#name-model" position="0 0.2 -2" scale="15 7 15" rotation="90 0 0"> </a-entity>
 
       <a-entity id="cube-cluster"></a-entity>
     </a-scene>
 
     <script>
-    // Cube parameters
+      // Utility: Convert string rotation to object
+      let isRotating = false;
 
-    const positions = [-1, 0, 1]; // x συντεταγμένες των στηλών του κύβου
-    // ο κύβος είναι 3x3x3 οι θέσεις είναι αριστερά (-1), κέντρο (0), δεξιά (1)
+      // Cube parameters
 
-    const layersY = [1, 2, 3]; // τα επίπεδα καθ' ύψος κατά πάνω απόσταση στα κυβάκια
-    // y=1 κάτω, y=2 μεσαίο, y=3 πάνω
+      const positions = [-1, 0, 1]; // x συντεταγμένες των στηλών του κύβου
+      // ο κύβος είναι 3x3x3 οι θέσεις είναι αριστερά (-1), κέντρο (0), δεξιά (1)
 
-    const layersZ = [-2, -3, -4]; // κατά z μπρος πίσω
-    const cubeSize = 0.4;  // η απόσταση στα κυβάκια το μέγεθος του βασικά
-    const model = '#cube-model';
+      const layersY = [1, 2, 3]; // τα επίπεδα καθ' ύψος κατά πάνω απόσταση στα κυβάκια
+      // y=1 κάτω, y=2 μεσαίο, y=3 πάνω
 
-    // Slices definitions, with their centers and match functions
-    const sliceDefs = {
-      // γραμμές
-      // αριστερά 90
-      Tl:  {center: [0,3,-3],  match: (x,y,z) => y===3, axis: 'y', angle: 90},      // Top row πρώτη γραμμή
-      // δεξιά -90
-      Tr:  {center: [0,3,-3],  match: (x,y,z) => y===3, axis: 'y', angle: -90},
-      // το κεντρικό σημείο γύρω από το οποίο θα περιστρέφεται η φέτα
+      const layersZ = [-2, -3, -4]; // κατά z μπρος πίσω
+      const cubeSize = 0.4;  // η απόσταση στα κυβάκια το μέγεθος του βασικά
+      const model = '#cube-model';
 
-      // δεξιά -90
-      Dr:  {center: [0,1,-3],  match: (x,y,z) => y===1, axis: 'y', angle: -90},     // Bottom row τελευταία γραμμή
-      // αριστερά 90
-      Dl:  {center: [0,1,-3],  match: (x,y,z) => y===1, axis: 'y', angle: 90},
+      // Slices definitions, with their centers and match functions
+      const sliceDefs = {
+        // γραμμές
+        // αριστερά 90
+        Tl:  {center: [0,3,-3],  match: (x,y,z) => y===3, axis: 'y', angle: 90},      // Top row πρώτη γραμμή
+        // δεξιά -90
+        Tr:  {center: [0,3,-3],  match: (x,y,z) => y===3, axis: 'y', angle: -90},
+        // το κεντρικό σημείο γύρω από το οποίο θα περιστρέφεται η φέτα
 
-      // αριστερά 90
-      Ml:  {center: [0,2,-3],  match: (x,y,z) => y===2, axis: 'y', angle: 90},
-      // δεξιά -90
-      Mr:  {center: [0,2,-3],  match: (x,y,z) => y===2, axis: 'y', angle: -90},
+        // δεξιά -90
+        Dr:  {center: [0,1,-3],  match: (x,y,z) => y===1, axis: 'y', angle: -90},     // Bottom row τελευταία γραμμή
+        // αριστερά 90
+        Dl:  {center: [0,1,-3],  match: (x,y,z) => y===1, axis: 'y', angle: 90},
 
-
-      // στήλες
-      // προς τα πάνω πάει η στήλη η πρώτη -90
-      Lu:  {center: [-1,2,-3], match: (x,y,z) => x===-1, axis: 'x', angle: -90},    // Left column
-      // προς τα κάτω πάει η στήλη η πρώτη 90
-      Ld:  {center: [-1,2,-3], match: (x,y,z) => x===-1, axis: 'x', angle: 90},
-
-      // προς τα κάτω πάει η στήλη η τρίτη δεξιά 90
-      Rd:  {center: [1,2,-3],  match: (x,y,z) => x===1, axis: 'x', angle: 90},      // Right column
-      // προς τα πάνω πάει η στήλη η τρίτη δεξιά -90
-      Ru:  {center: [1,2,-3],  match: (x,y,z) => x===1, axis: 'x', angle: -90},
-      
-      // προς τα πάνω πάει η στήλη η δεύτερη κέντρο -90
-      Mu:  {center: [0,2,-3],  match: (x,y,z) => x===0, axis: 'x', angle: -90},
-      // προς τα κάτω πάει η στήλη η δεύτερη κέντρο 90
-      Md:  {center: [0,2,-3],  match: (x,y,z) => x===0, axis: 'x', angle: 90},
+        // αριστερά 90
+        Ml:  {center: [0,2,-3],  match: (x,y,z) => y===2, axis: 'y', angle: 90},
+        // δεξιά -90
+        Mr:  {center: [0,2,-3],  match: (x,y,z) => y===2, axis: 'y', angle: -90},
 
 
-      // faces
-      // προς τα αριστερά το μπροστά face 90
-      FFl:  {center: [0,2,-2],  match: (x,y,z) => z===-2, axis: 'z', angle: 90},     // Front slice
-      // προς τα δεξιά το μπροστά face -90
-      FFr:  {center: [0,2,-2],  match: (x,y,z) => z===-2, axis: 'z', angle: -90},
-      
-      // προς τα αριστερά το πίσω face 90
-      BFl:  {center: [0,2,-4],  match: (x,y,z) => z===-4, axis: 'z', angle: 90},
-      // προς τα δεξιά το πίσω face -90
-      BFr:  {center: [0,2,-4],  match: (x,y,z) => z===-4, axis: 'z', angle: -90},    // Back slice
+        // στήλες
+        // προς τα πάνω πάει η στήλη η πρώτη -90
+        Lu:  {center: [-1,2,-3], match: (x,y,z) => x===-1, axis: 'x', angle: -90},    // Left column
+        // προς τα κάτω πάει η στήλη η πρώτη 90
+        Ld:  {center: [-1,2,-3], match: (x,y,z) => x===-1, axis: 'x', angle: 90},
 
-      // προς τα αριστερά το μεσαίο face 90
-      MFl:  {center: [0,2,-3],  match: (x,y,z) => z===-3, axis: 'z', angle: 90},
-      // προς τα δεξιά το μεσαίο face -90
-      MFr:  {center: [0,2,-3],  match: (x,y,z) => z===-3, axis: 'z', angle: -90}
-    };
+        // προς τα κάτω πάει η στήλη η τρίτη δεξιά 90
+        Rd:  {center: [1,2,-3],  match: (x,y,z) => x===1, axis: 'x', angle: 90},      // Right column
+        // προς τα πάνω πάει η στήλη η τρίτη δεξιά -90
+        Ru:  {center: [1,2,-3],  match: (x,y,z) => x===1, axis: 'x', angle: -90},
+        
+        // προς τα πάνω πάει η στήλη η δεύτερη κέντρο -90
+        Mu:  {center: [0,2,-3],  match: (x,y,z) => x===0, axis: 'x', angle: -90},
+        // προς τα κάτω πάει η στήλη η δεύτερη κέντρο 90
+        Md:  {center: [0,2,-3],  match: (x,y,z) => x===0, axis: 'x', angle: 90},
 
-    // Create all cubelets under cube-cluster, no duplicates
-    // παίρνει το στοιχείο που έχει id="cube-cluster", εκεί μέσα θα μπουν όλα τα cubelets
-    const cluster = document.getElementById('cube-cluster');
-    let cubelets = []; // στον πιίνακα θα αποθηκευτούν όλα τα cubelets που θα δημιουργηθούν
-    for (let y of layersY) {
-      for (let x of positions) {
-        for (let z of layersZ) {
-          let cubelet = document.createElement('a-entity'); // δημιουργεί ένα νέο A-Frame entity («κύβο»)
-          cubelet.setAttribute('gltf-model', model); // βάζει το glTF μοντέλο που θα χρησιμοποιήσει ο κάθε κύβος
-          cubelet.setAttribute('position', `${x} ${y} ${z}`); //ορίζει τη 3D θέση του cubelet στο χώρο (X, Y, Z)
-          cubelet.setAttribute('scale', `${cubeSize} ${cubeSize} ${cubeSize}`); // ορίζει το μέγεθος (scale) του cubelet σε όλες τις διαστάσεις ίσο με cubeSize
-          cubelet.setAttribute('rotation', `0 0 0`); // βάζει προεπιλεγμένη περιστροφή (κανένα rotation)
-          cubelet.setAttribute('data-x', x);
-          cubelet.setAttribute('data-y', y);
-          cubelet.setAttribute('data-z', z);
-          cluster.appendChild(cubelet); // προσθέτει το cubelet μέσα στο cluster, άρα εμφανίζεται στη σκηνή
-          cubelets.push(cubelet); // το κρατάει και στην λίστα cubelets
+
+        // faces
+        // προς τα αριστερά το μπροστά face 90
+        FFl:  {center: [0,2,-2],  match: (x,y,z) => z===-2, axis: 'z', angle: 90},     // Front slice
+        // προς τα δεξιά το μπροστά face -90
+        FFr:  {center: [0,2,-2],  match: (x,y,z) => z===-2, axis: 'z', angle: -90},
+        
+        // προς τα αριστερά το πίσω face 90
+        BFl:  {center: [0,2,-4],  match: (x,y,z) => z===-4, axis: 'z', angle: 90},
+        // προς τα δεξιά το πίσω face -90
+        BFr:  {center: [0,2,-4],  match: (x,y,z) => z===-4, axis: 'z', angle: -90},    // Back slice
+
+        // προς τα αριστερά το μεσαίο face 90
+        MFl:  {center: [0,2,-3],  match: (x,y,z) => z===-3, axis: 'z', angle: 90},
+        // προς τα δεξιά το μεσαίο face -90
+        MFr:  {center: [0,2,-3],  match: (x,y,z) => z===-3, axis: 'z', angle: -90}
+      };
+
+      // Create all cubelets under cube-cluster, no duplicates
+      // παίρνει το στοιχείο που έχει id="cube-cluster", εκεί μέσα θα μπουν όλα τα cubelets
+      const cluster = document.getElementById('cube-cluster');
+      let cubelets = []; // στον πιίνακα θα αποθηκευτούν όλα τα cubelets που θα δημιουργηθούν
+      for (x of positions) {
+        for (let y of layersY) {
+          for (let z of layersZ) {
+            let cubelet = document.createElement('a-entity'); // δημιουργεί ένα νέο A-Frame entity («κύβο»)
+            cubelet.setAttribute('gltf-model', model); // βάζει το glTF μοντέλο που θα χρησιμοποιήσει ο κάθε κύβος
+            cubelet.setAttribute('position', `${x} ${y} ${z}`); //ορίζει τη 3D θέση του cubelet στο χώρο (X, Y, Z)
+            cubelet.setAttribute('scale', `${cubeSize} ${cubeSize} ${cubeSize}`); // ορίζει το μέγεθος (scale) του cubelet σε όλες τις διαστάσεις ίσο με cubeSize
+            cubelet.setAttribute('rotation', `0 0 0`); // βάζει προεπιλεγμένη περιστροφή (κανένα rotation)
+            cubelet.setAttribute('data-x', x);
+            cubelet.setAttribute('data-y', y);
+            cubelet.setAttribute('data-z', z);
+            cluster.appendChild(cubelet); // προσθέτει το cubelet μέσα στο cluster, άρα εμφανίζεται στη σκηνή
+            cubelets.push(cubelet); // το κρατάει και στην λίστα cubelets
+          }
         }
       }
-    }
 
-    // Utility: Convert string rotation to object
-    // μια συνάρτηση με παράμετρο rot.
-    function parseRotation(rot) {
-      if (typeof rot === 'string') { // τσεκάρει αν το rot είναι string
-        // πχ. "0 45 90"
+      // Utility: Convert string rotation to object
+      // μια συνάρτηση με παράμετρο rot.
+      function parseRotation(rot) {
+        if (typeof rot === 'string') { // τσεκάρει αν το rot είναι string
+          // πχ. "0 45 90"
 
-        // 1. rot.trim() → αφαιρεί κενά στην αρχή/τέλος
-        // 2. .split(/\s+/) → σπάει το string όπου βρει ένα ή περισσότερα κενά "30 0 90" → ["30","0","90"]
-        // 3. .map(Number) → μετατρέπει κάθε στοιχείο σε αριθμό ["30","0","90"] → [30, 0, 90]
-        let arr = rot.trim().split(/\s+/).map(Number);
-        return {x: arr[0]||0, y: arr[1]||0, z: arr[2]||0};
-      }
-      return rot || {x:0, y:0, z:0};
-    }
-
-    // Rotate slice animation
-    function rotateSlice(face) {
-      const sliceDef = sliceDefs[face]; // παίρνει τισ πληροφορίεσ απ'την ζητούμενη φέτα
-      if (!sliceDef) return; // αν δεν υπάρχει σταματάει
-      const {center, match, axis, angle} = sliceDef;
-      // από την φέτα παίρνει center, match, axis, angle:
-      // center: το κέντρο γύρω από το οποίο θα περιστραφεί η φέτα
-      // match: συνάρτηση που λέει ποια cubelets ανήκουν στη φέτα
-      // axis: ο άξονας περιστροφής (x, y ή z)
-      // angle: μοίρες που θα γυρίσει (+90, -90 κλπ)
-
-      // Find affected cubelets
-      // κοιτάει ΟΛΑ τα cubelets
-      // διαβάζει τις αποθηκευμένες θέσεις τους (data-x, data-y, data-z)
-      // χρησιμοποιεί τη συνάρτηση match(...) από το slice definition πάνω
-      // φτιάχνει μια λίστα affected με όλα τα cubelets που ανήκουν στη συγκεκριμένη φέτα που γυρίζει.
-      let affected = cubelets.filter(cubelet => {
-        const x = parseInt(cubelet.getAttribute('data-x'));
-        const y = parseInt(cubelet.getAttribute('data-y'));
-        const z = parseInt(cubelet.getAttribute('data-z'));
-        return match(x,y,z);
-      });
-
-      // For each affected cubelet, animate rotation about the slice center
-      affected.forEach(cubelet => {
-        // Get current position and rotation
-        let pos = cubelet.getAttribute('position');
-        let rot = parseRotation(cubelet.getAttribute('rotation'));
-
-        // Compute position relative to slice center
-        let rel = {
-          x: pos.x - center[0],
-          y: pos.y - center[1],
-          z: pos.z - center[2]
-        };
-
-        // Rotate rel position around axis by angle
-        let rad = angle * Math.PI/180;
-        let newRel = {...rel};
-        if (axis === 'x') {
-          newRel.y = rel.y * Math.cos(rad) - rel.z * Math.sin(rad);
-          newRel.z = rel.y * Math.sin(rad) + rel.z * Math.cos(rad);
-        } else if (axis === 'y') {
-          newRel.x = rel.x * Math.cos(rad) - rel.z * Math.sin(rad);
-          newRel.z = rel.x * Math.sin(rad) + rel.z * Math.cos(rad);
-        } else if (axis === 'z') {
-          newRel.x = rel.x * Math.cos(rad) - rel.y * Math.sin(rad);
-          newRel.y = rel.x * Math.sin(rad) + rel.y * Math.cos(rad);
+          // 1. rot.trim() → αφαιρεί κενά στην αρχή/τέλος
+          // 2. .split(/\s+/) → σπάει το string όπου βρει ένα ή περισσότερα κενά "30 0 90" → ["30","0","90"]
+          // 3. .map(Number) → μετατρέπει κάθε στοιχείο σε αριθμό ["30","0","90"] → [30, 0, 90]
+          let arr = rot.trim().split(/\s+/).map(Number);
+          return {x: arr[0]||0, y: arr[1]||0, z: arr[2]||0};
         }
+        return rot || {x:0, y:0, z:0};
+      }
 
-        // Compute new world position
-        let newPos = {
-          x: center[0] + Math.round(newRel.x),
-          y: center[1] + Math.round(newRel.y),
-          z: center[2] + Math.round(newRel.z)
-        };
+      // Rotate slice animation
+      function rotateSlice(face) {
+        if (isRotating) return;
+        isRotating = true;
 
-        // Animate position
-        cubelet.setAttribute('animation__pos', {
-          property: 'position',
-          to: `${newPos.x} ${newPos.y} ${newPos.z}`,
-          dur: 550, // διάρκεια
-          easing: 'easeInOutQuad' // υπάρχουν διάφορα
+        const sliceDef = sliceDefs[face]; // παίρνει τισ πληροφορίεσ απ'την ζητούμενη φέτα
+        if (!sliceDef) {
+          isRotating = false;
+          return;
+        } // αν δεν υπάρχει σταματάει
+
+        const {center, match, axis, angle} = sliceDef;
+        // από την φέτα παίρνει center, match, axis, angle:
+        // center: το κέντρο γύρω από το οποίο θα περιστραφεί η φέτα
+        // match: συνάρτηση που λέει ποια cubelets ανήκουν στη φέτα
+        // axis: ο άξονας περιστροφής (x, y ή z)
+        // angle: μοίρες που θα γυρίσει (+90, -90 κλπ)
+
+        // Find affected cubelets
+        // κοιτάει ΟΛΑ τα cubelets
+        // διαβάζει τις αποθηκευμένες θέσεις τους (data-x, data-y, data-z)
+        // χρησιμοποιεί τη συνάρτηση match(...) από το slice definition πάνω
+        // φτιάχνει μια λίστα affected με όλα τα cubelets που ανήκουν στη συγκεκριμένη φέτα που γυρίζει.
+        let affected = cubelets.filter(cubelet => {
+          const x = parseInt(cubelet.getAttribute('data-x'));
+          const y = parseInt(cubelet.getAttribute('data-y'));
+          const z = parseInt(cubelet.getAttribute('data-z'));
+          return match(x,y,z);
         });
 
-        // Animate rotation (just axis for visual)
-          let newRot = {...rot};
+        // For each affected cubelet, animate rotation about the slice center
+        affected.forEach(cubelet => {
+          // Get current position and rotation
+          let pos = cubelet.getAttribute('position');
+          let rot = parseRotation(cubelet.getAttribute('rotation'));
+
+          // Compute position relative to slice center
+          let rel = {
+            x: pos.x - center[0],
+            y: pos.y - center[1],
+            z: pos.z - center[2]
+          };
+          
+
+          // Rotate rel position around axis by angle
+          let rad = angle * Math.PI/180;
+          let newRel = {...rel};
           if (axis === 'x') {
-            newRot.x += angle;
+            newRel.y = rel.y * Math.cos(rad) - rel.z * Math.sin(rad);
+            newRel.z = rel.y * Math.sin(rad) + rel.z * Math.cos(rad);
           } else if (axis === 'y') {
-            newRot.y -= angle;
+            newRel.x = rel.x * Math.cos(rad) - rel.z * Math.sin(rad);
+            newRel.z = rel.x * Math.sin(rad) + rel.z * Math.cos(rad);
           } else if (axis === 'z') {
-            newRot.z += angle;
+            newRel.x = rel.x * Math.cos(rad) - rel.y * Math.sin(rad);
+            newRel.y = rel.x * Math.sin(rad) + rel.y * Math.cos(rad);
           }
-          cubelet.setAttribute('animation__rot', {
-            property: 'rotation',
-            to: `${newRot.x} ${newRot.y} ${newRot.z}`,
-            dur: 550,
-            easing: 'easeInOutQuad'
+
+          // Compute new world position
+          let newPos = {
+            x: center[0] + Math.round(newRel.x),
+            y: center[1] + Math.round(newRel.y),
+            z: center[2] + Math.round(newRel.z)
+          };
+
+          // Animate position
+          cubelet.setAttribute('animation__pos', {
+            property: 'position',
+            to: `${newPos.x} ${newPos.y} ${newPos.z}`,
+            dur: 550, // διάρκεια
+            easing: 'easeInOutQuad' // υπάρχουν διάφορα
           });
 
-        // Update stored position/rotation after animation completes
-        setTimeout(() => {
-          cubelet.setAttribute('position', `${newPos.x} ${newPos.y} ${newPos.z}`);
-          cubelet.setAttribute('rotation', `${newRot.x} ${newRot.y} ${newRot.z}`);
-          cubelet.setAttribute('data-x', newPos.x);
-          cubelet.setAttribute('data-y', newPos.y);
-          cubelet.setAttribute('data-z', newPos.z);
-          // Remove animation so further clicks work
-          //cubelet.removeAttribute('animation__pos');
-          //cubelet.removeAttribute('animation__rot');
-        }, 650);
-      });
-    }
-    window.rotateSlice = rotateSlice;
+
+          // Animate rotation (just axis for visual)
+            let newRot = {...rot};
+            if (axis === 'x') {
+              newRot.x += angle;
+            } else if (axis === 'y') {
+              newRot.y += -angle;
+            } else if (axis === 'z') {
+              newRot.z += angle;
+            }
+            cubelet.setAttribute('animation__rot', {
+              property: 'rotation',
+              to: `${newRot.x} ${newRot.y} ${newRot.z}`,
+              dur: 550,
+              easing: 'easeInOutQuad'
+            });
+
+
+          // Update stored position/rotation after animation completes
+          setTimeout(() => {
+            cubelet.setAttribute('position', `${newPos.x} ${newPos.y} ${newPos.z}`);
+            cubelet.setAttribute('rotation', `${newRot.x} ${newRot.y} ${newRot.z}`);
+            cubelet.setAttribute('data-x', newPos.x);
+            cubelet.setAttribute('data-y', newPos.y);
+            cubelet.setAttribute('data-z', newPos.z);
+            // Remove animation so further clicks work
+            //cubelet.removeAttribute('animation__pos');
+            //cubelet.removeAttribute('animation__rot');
+            isRotating = false;
+          }, 650);
+        });
+      }
+      window.rotateSlice = rotateSlice;
     </script>
   </body>
 </html>
