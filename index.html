@@ -9,62 +9,71 @@
   </head>
   <body>
     <div id="rubiks-menu">
-      <b>Rotate Slice (grouped, centered):</b>
+      <b>Rotation Options</b>
 
-      <!--Rotate γραμμές-->
-      <!--Rotate για την πρώτη γραμμή-->
-      <button onclick="rotateSlice('Tl')">T_left (Top, y=3)</button>
-      <button onclick="rotateSlice('Tr')">T_right (Top, y=3)</button>
+      <!--rotate γραμμές-->
+      <!--rotate για την πρώτη γραμμή-->
+      <button onclick="rotateSlice('Tl')">Top forward - left</button>
+      <button onclick="rotateSlice('Tr')">Top forward - right</button>
 
-      <!--Rotate για την τελευταία γραμμή-->
-      <button onclick="rotateSlice('Dl')">D_left (Down, y=1)</button>
-      <button onclick="rotateSlice('Dr')">D_right (Down, y=1)</button>
+      <!--rotate για την μεσαία (δεύτερη) γραμμή-->
+      <button onclick="rotateSlice('Ml')">Middle forward - left</button>
+      <button onclick="rotateSlice('Mr')">Middle forward - right</button>
 
-      <!--Rotate για την μεσαία (δεύτερη) γραμμή-->
-      <button onclick="rotateSlice('Ml')">M_left (Mid, y=2)</button>
-      <button onclick="rotateSlice('Mr')">M_right (Mid, y=2)</button>
+      <!--rotate για την τελευταία γραμμή-->
+      <button onclick="rotateSlice('Dl')">Bottom forward - left</button>
+      <button onclick="rotateSlice('Dr')">Bottom forward - right</button>
 
+      <hr><hr> <!--ομοιομορφία στα buttons-->
 
-      <!--Rotate στήλες-->
-      <!--Rotate για την πρώτη (αριστερή) στήλη-->
-      <button onclick="rotateSlice('Lu')">L_up (Left, x=-1)</button>
-      <button onclick="rotateSlice('Ld')">L_down (Left, x=-1)</button>
+      <!--rotate στήλες-->
+      <!--rotate για την πρώτη (αριστερή) στήλη-->
+      <button onclick="rotateSlice('Lu')">Top left verical - up</button>
+      <button onclick="rotateSlice('Ld')">Top left verical - down</button>
 
-      <!--Rotate για την τρίτη (δεξιά) στήλη-->
-      <button onclick="rotateSlice('Ru')">R_up (Right, x=1)</button>
-      <button onclick="rotateSlice('Rd')">R_down (Right, x=1)</button>
-      
-      <!--Rotate για την δεύτερη (κέντρο) στήλη-->
-      <button onclick="rotateSlice('Mu')">M_up (Mid, x=0)</button>
-      <button onclick="rotateSlice('Md')">M_down (Mid, x=0)</button>
+      <!--rotate για την δεύτερη (κέντρο) στήλη-->
+      <button onclick="rotateSlice('Mu')">Middle vertical - up</button>
+      <button onclick="rotateSlice('Md')">Middle vertical - down</button>
 
+      <!--rotate για την τρίτη (δεξιά) στήλη-->
+      <button onclick="rotateSlice('Ru')">Top right vertical - up</button>
+      <button onclick="rotateSlice('Rd')">Top right vertical - down</button>
 
-      <!--Rotate Faces-->
-      <!--Rotate για το πρώτο face (μπροστά)-->
-      <button onclick="rotateSlice('FFl')">FF_left (Front Face, z=-2)</button>
-      <button onclick="rotateSlice('FFr')">FF_right (Front Face, z=-2)</button>
+      <hr><hr>
 
-      <!--Rotate για το τρίτο face (πίσω)-->
-      <button onclick="rotateSlice('BFl')">BF_left (Back Face, z=-4)</button>
-      <button onclick="rotateSlice('BFr')">BF_right (Back Face, z=-4)</button>
+      <!--rotate faces-->
+      <!--rotate για το πρώτο face (μπροστά)-->
+      <button onclick="rotateSlice('FFl')">Front face - left</button>
+      <button onclick="rotateSlice('FFr')">Front face - right</button>
 
-      <!--Rotate για το δεύτρο face (μέση)-->
-      <button onclick="rotateSlice('MFl')">MF_left (Mid Face, z=-3)</button>
-      <button onclick="rotateSlice('MFr')">MF_right (Mid Face, z=-3)</button>
+      <!--rotate για το δεύτρο face (μέση)-->
+      <button onclick="rotateSlice('MFl')">Middle face - left</button>
+      <button onclick="rotateSlice('MFr')">Middle face - right</button>
 
+      <!--rotate για το τρίτο face (πίσω)-->
+      <button onclick="rotateSlice('BFl')">Back face - left</button>
+      <button onclick="rotateSlice('BFr')">Back face - right</button>
+
+      <hr><hr>
+
+      <!--undo button-->
       <button onclick="undoMove()">Undo</button>
     </div>
+    
     <a-scene stats>
       <a-assets>
+        <!--cube with albums-->
         <a-asset-item id="cube-model" src="https://johnnys1611.github.io/CUBE/cube_pictures_blender.glb"></a-asset-item>
+        <!--Tzonys-->
         <a-asset-item id="name-model" src="https://johnnys1611.github.io/CUBE/name_Tzonys.glb"></a-asset-item>
+        <!--sky texture-->
         <img id="skyTexture" src="https://raw.githubusercontent.com/johnnys1611/CUBE/main/3840px-Herne_Wanne_Tunnel_03_Panorama.jpg" crossorigin="anonymous"/>
       </a-assets>
 
       <a-sky src="#skyTexture"></a-sky>
 
-      <a-entity light="type: directional; intensity:6.2; color:#fff" position="1 4 2"></a-entity> <!--directional: το φως έρχεται παράλληλα από μία κατεύθυνση και φωτίζει ΟΛΑ τα αντικείμενα-->
-      <a-entity light="type: ambient; intensity:2.35; color:#fff"></a-entity> <!--ambient: γενικό φως παντού, χωρίς κατεύθυνση, χωρίς σκιές-->
+      <a-entity light="type: directional; intensity:6.2; color:#fff" position="1 4 2"></a-entity> <!--directional: το φως έρχεται παράλληλα από μία κατεύθυνση και φωτίζει όλα τα αντικείμενα-->
+      <a-entity light="type: ambient; intensity:2.35; color:#fff"></a-entity> <!--ambient: γενικό φως παντού-->
       <a-entity light="type: point; intensity:3.6; distance:10" position="-3 2 0"></a-entity> <!--αριστερά-->
       <a-entity light="type: point; intensity:1.2; distance:8" position="3 2 0"></a-entity> <!--δεξιά-->
       <a-entity light="type: point; intensity:3.6; distance:10" position="0 1 -5"></a-entity> <!--μπροστά-->
@@ -72,11 +81,11 @@
 
       <a-camera position="0 2 1" rotation="-15 0 0"></a-camera> <!--καμερούλα-->
 
-      <a-entity gltf-model="#name-model" position="0 0.2 -2" scale="15 7 15" rotation="90 0 0"> </a-entity>
+      <a-entity gltf-model="#name-model" position="0 0.2 -2" scale="15 7 15" rotation="90 0 0"> </a-entity> <!--Tzonys-->
 
       <a-entity id="cube-cluster"></a-entity>
     </a-scene>
-    
+
     <script src="script.js" defer></script>
   </body>
 </html>
