@@ -143,7 +143,7 @@ function rotateSlice(face, isUndo = false) {
 
   // animation params
   const totalAngle = THREE.MathUtils.degToRad(angle);
-  const step = totalAngle / 20; // frames
+  const step = totalAngle / 25; // frames
   let rotated = 0; // πόσο έχει περιστραφεί μέχρι στιγμής
 
   // animation loop
@@ -230,3 +230,4 @@ function undoMove() {
 }
 
 window.rotateSlice = rotateSlice;
+
