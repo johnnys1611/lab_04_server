@@ -1,6 +1,6 @@
 # The Underground Rubik's Cube
 
-A 3D interactive Rubik’s Cube built with A-Frame and Three.js, where **each side of the cube is not made of simple colors but music albums**.
+A 3D interactive Rubik’s Cube built with A-Frame and Three.js, where each side of the cube is not made of simple colors but music albums.
 Users can rotate rows, columns, and faces of the cube just like a real Rubik’s Cube, inside an immersive 3D environment.
 
 https://johnnys1611.github.io/CUBE/
